@@ -4,13 +4,17 @@ FILES=wsdls/*.wsdl
 
 rm -rf FedExPHP/src
 
+if [ ! -d "FedExPHP" ]
+then
+    mkdir FedExPHP
+fi
 
 for f in $FILES
 do
     FILENAME=${f:6}
     SERVICE=${FILENAME%Service*.wsdl}
     echo "Processing $FILENAME Service $SERVICE"
-    ./bin/wsdltophp.phar generate:package --config=config/wsdltophp.yml --urlorpath="wsdls/${FILENAME}" --destination="FedExPHP/" --namespace="NicholasCreativeMedia\FedExPHP" --force
+    ./bin/wsdltophp.phar generate:package --config=config/wsdltophp.yml --urlorpath="wsdls/${FILENAME}" --destination="FedExPHP/" --namespace="CommerceFedEx\FedExPHP" --force
   #  mv "FedExPHP/src/Services/Service.php" "FedExPHP/src/Services/${SERVICE}Service.php"
  #   mv "FedExPHP/src/ClassMap.php" "FedExPHP/src/${SERVICE}ClassMap.php"
     SRVID=`grep -A 1 "system or sub-system" FedExPHP/src/Structs/VersionId.php | tail -n 1 | sed 's/     \* - fixed: //'`
@@ -35,12 +39,12 @@ do
     echo "        if (\$mode === true) \$mode = 'live';" >> "FedExPHP/src/Services/${SERVICE}Service.php"
     echo "        \$default_options = [" >> "FedExPHP/src/Services/${SERVICE}Service.php"
     echo "           \WsdlToPhp\PackageBase\AbstractSoapClientBase::WSDL_URL => dirname(__FILE__).DIRECTORY_SEPARATOR.'wsdl-'.\$mode.DIRECTORY_SEPARATOR.'${FILENAME}'," >> "FedExPHP/src/Services/${SERVICE}Service.php"
-    echo "           \WsdlToPhp\PackageBase\AbstractSoapClientBase::WSDL_CLASSMAP => \\NicholasCreativeMedia\\FedExPHP\\${SERVICE}ClassMap::get()," >> "FedExPHP/src/Services/${SERVICE}Service.php"
+    echo "           \WsdlToPhp\PackageBase\AbstractSoapClientBase::WSDL_CLASSMAP => \\CommerceFedEx\\FedExPHP\\${SERVICE}ClassMap::get()," >> "FedExPHP/src/Services/${SERVICE}Service.php"
     echo "        ];" >> "FedExPHP/src/Services/${SERVICE}Service.php"
     echo "        \$options = array_merge(\$default_options,\$wsdlOptions);" >> "FedExPHP/src/Services/${SERVICE}Service.php"
     echo "        parent::__construct(\$options,\$resetSoapClient,\$mode);" >> "FedExPHP/src/Services/${SERVICE}Service.php"
     echo "" >> "FedExPHP/src/Services/${SERVICE}Service.php"
-    echo "        \$this->version = new \\NicholasCreativeMedia\\FedExPHP\\Structs\\VersionId('${SRVID}',${MAJOR},${INT},${MINOR});" >> "FedExPHP/src/Services/${SERVICE}Service.php"
+    echo "        \$this->version = new \\CommerceFedEx\\FedExPHP\\Structs\\VersionId('${SRVID}',${MAJOR},${INT},${MINOR});" >> "FedExPHP/src/Services/${SERVICE}Service.php"
     echo "    }" >> "FedExPHP/src/Services/${SERVICE}Service.php"
     echo ""
 

@@ -1,18 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: mike
- * Date: 3/9/17
- * Time: 8:56 AM
- */
 
-namespace NicholasCreativeMedia\FedExPHP\Services;
+namespace CommerceFedEx\FedExPHP\Services;
 
 use \WsdlToPhp\PackageBase\AbstractSoapClientBase;
 
 /**
  * Class FedExService
- * @package NicholasCreativeMedia\FedExPHP\Services
+ * @package CommerceFedEx\FedExPHP\Services
  */
 class FedExService extends AbstractSoapClientBase
 {
